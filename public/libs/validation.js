@@ -1,49 +1,60 @@
 
 function ValidateForm(){    
-    result = true;
+    var validation = true;
     $("input").each(function() {
         var id =  $(this)[0].id ;
+        inp = id;
         var input = $(this);
         if(input.hasClass("required")){
             var valResult = ApplyValidation(id);
             if(!valResult){
-                result = false;
+                validation = false;
             }
         }
+        console.log(`Input - ${$(this)[0].id} Validation result - ${validation}`);
     });
+
     $("select").each(function() {
         var id =  $(this)[0].id ;
         var input = $("#"+id);
-        console.log("id - "+id);
-        console.log("value - "+input.val());
         if(input.hasClass("required")){
             var valResult = ApplyValidation(id);
             if(!valResult){
-                result = false;
+                validation = false;
             }
         }
+        console.log(`Input - ${$(this)[0].id} Validation result - ${validation}`);
     });
-    return result;
+    
+    return validation;
 }
 
 function ApplyValidation(id){
+    var result = true;
     if(IsEmptyInput($("#"+id))){
         $("#"+id).addClass("requiredBox");
         $("#"+id).focus();
         $("#"+id).parent().next().css("display", "block");
         $("#"+id).parent().next().html($("#"+id).attr("name") + " is required");
+        result = false;
     }else{
         $("#"+id).removeClass("requiredBox");
         $("#"+id).parent().next().css("display", "none");
         $("#"+id).parent().next().html("");
     }
+    return result;
 }
 
 function IsEmptyInput(input){
-    if(input.val()){
-        return false;
+    var result = false;
+    var inputValue = input.val().toLowerCase();
+    if(inputValue){
+        if(inputValue.includes("select")){
+            result = true;
+        }
     }
     else{
-        return true;
+        result = true;
     }
+    return result;
 }
